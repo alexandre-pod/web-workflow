@@ -6,13 +6,15 @@ A web workflow for a single page app
 
 ```
 npm install --dev
+gulp build
+or
 gulp watch
 ```
 
 ## structure
 
 source:
-
+```
 page
 ├css
 │├style1.css
@@ -26,9 +28,9 @@ page
 ├index.html
 ├sw.js
 └manifest.json
-
+```
 build folder:
-
+```
 dest
 ├style.css
 ├style.min.css
@@ -37,7 +39,7 @@ dest
 ├index.html
 ├sw.js
 └manifest.json
-
+```
 ## possibilities
 
 All styles (in css/) are combined, auto-prefixed and minified.
