@@ -4,11 +4,14 @@ A web workflow for a single page app
 
 ## how to use
 
+Install dependencies
 ```
 npm install --dev
-gulp build
-or
-gulp watch
+```
+
+Build page and start server with browser-sync
+```
+gulp serve
 ```
 
 ## structure
@@ -17,15 +20,13 @@ source:
 ```
 page
 ├css
-│├style1.css
-│└style2.css
+│└style1.css
 ├js
-│├script1.js
-│└script2.js
+│└script1.js
 ├template
-│├template1.html
-│└template2.html
+│└template1.html
 ├index.html
+├offline.html
 ├sw.js
 └manifest.json
 ```
@@ -37,6 +38,7 @@ dest
 ├script.js
 ├script.min.js
 ├index.html
+├offline.html
 ├sw.js
 └manifest.json
 ```
@@ -47,4 +49,6 @@ All scripts (in js/) are linted, combined and minified.
 
 The index.html can import template into the file with the syntax of module gulp-file-include.
 
-Any other ressources are copied to the build folder
+Any other ressources are copied to the build folder.
+
+A default service worker is present, and it is possible to list files to keep in cache.

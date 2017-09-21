@@ -1,3 +1,4 @@
+// This file enable the service worker if it works on the navigator
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('sw.js').then(function(registration) {

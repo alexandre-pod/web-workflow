@@ -29,6 +29,9 @@ const htmlmin = require('gulp-htmlmin');
 const htmlhint = require('gulp-htmlhint');
 
 
+var browserSync = require('browser-sync').create();
+
+// Constants
 const pagePath = 'page';
 const cssFiles = path.join(pagePath, 'css', '*.css');
 const jsFiles = path.join(pagePath, 'js', '*.js');
@@ -108,9 +111,20 @@ gulp.task('watch-files', function() {
 	// );
 });
 
+gulp.task('browser-sync', function() {
+    browserSync.init({
+        server: {
+            baseDir: "./dist"
+        }
+    });
+      gulp.watch("dist/*").on('change', browserSync.reload);
+});
+
 gulp.task('watch', ['build', 'watch-files']);
 
 gulp.task('build', ['build-js', 'build-css', 'build-html', 'other']);
+
+gulp.task('serve', ['watch', 'browser-sync']);
 
 gulp.task('clean', (cb) => {
 	rimraf(path.join('.', destinationFolder), cb);
