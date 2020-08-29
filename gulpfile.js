@@ -49,7 +49,7 @@ gulp.task('lint-js', () => {
 		.pipe(jshint.reporter('fail'));
 });
 
-gulp.task('build-js', ['lint-js'], () => {
+gulp.task('build-js', gulp.series('lint-js', () => {
 	return gulp.src(jsFiles)
 		.pipe(plumber())
 		.pipe(concat('script.js'))
@@ -57,16 +57,13 @@ gulp.task('build-js', ['lint-js'], () => {
 		.pipe(uglify())
 		.pipe(rename('script.min.js'))
 		.pipe(gulp.dest(destinationFolder));
-});
+}));
 
 // CSS
 gulp.task('build-css', () => {
 	return gulp.src(cssFiles)
 		.pipe(concat('style.css'))
-		.pipe(autoprefixer({
-			browsers: ['last 2 versions'],
-			cascade: false
-		}))
+		.pipe(autoprefixer({cascade: false}))
 		.pipe(gulp.dest(destinationFolder))
 		.pipe(cleanCSS())
 		.pipe(rename('style.min.css'))
@@ -81,8 +78,8 @@ gulp.task('lint-html', () => {
 		.pipe(htmlhint.failReporter());
 });
 
-gulp.task('build-html', ['lint-html'], function() {
-  gulp.src(indexFile)
+gulp.task('build-html', gulp.series('lint-html', () => {
+  return gulp.src(indexFile)
   	.pipe(plumber())
     .pipe(fileinclude({
       prefix: '@@',
@@ -92,7 +89,7 @@ gulp.task('build-html', ['lint-html'], function() {
     .pipe(htmlhint.failReporter())
     .pipe(htmlmin({collapseWhitespace: true}))
     .pipe(gulp.dest(destinationFolder));
-});
+}));
 
 
 // copy other ressources
@@ -102,16 +99,15 @@ gulp.task('other', () => {
 });
 
 
-gulp.task('watch-files', function() {
-	// return merge(
-		gulp.watch(cssFiles, ['build-css']);
-		gulp.watch(jsFiles, ['build-js']);
-		gulp.watch([templateFiles, indexFile], ['build-html']);
-		gulp.watch(othersRessources, ['other']);
-	// );
+gulp.task('watch-files', (done) => {
+	gulp.watch(cssFiles, gulp.series('build-css'));
+	gulp.watch(jsFiles, gulp.series('build-js'));
+	gulp.watch([templateFiles, indexFile], gulp.series('build-html'));
+	gulp.watch(othersRessources, gulp.series('other'));
+	done();
 });
 
-gulp.task('browser-sync', function() {
+gulp.task('browser-sync', () => {
     browserSync.init({
         server: {
             baseDir: "./dist"
@@ -120,11 +116,11 @@ gulp.task('browser-sync', function() {
       gulp.watch("dist/*").on('change', browserSync.reload);
 });
 
-gulp.task('watch', ['build', 'watch-files']);
+gulp.task('build', gulp.series('build-js', 'build-css', 'build-html', 'other'));
 
-gulp.task('build', ['build-js', 'build-css', 'build-html', 'other']);
+gulp.task('watch', gulp.series('build', 'watch-files'));
 
-gulp.task('serve', ['watch', 'browser-sync']);
+gulp.task('serve', gulp.series('watch', 'browser-sync'));
 
 gulp.task('clean', (cb) => {
 	rimraf(path.join('.', destinationFolder), cb);

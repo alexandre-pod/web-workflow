@@ -26,5 +26,8 @@
     "gulp-watch": "^5.0.0",
     "jshint": "^2.9.4",
     "rimraf": "^3.0.2"
-  }
+  },
+  "browserslist": [
+    "last 2 versions"
+  ]
 }
