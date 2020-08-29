@@ -7,11 +7,7 @@ const gulp = require('gulp');
 const concat = require('gulp-concat');
 const rename = require('gulp-rename');
 const plumber = require('gulp-plumber');
-const watch = require('gulp-watch');
-const merge = require('gulp-merge');
 const path = require('path');
-const fs = require('fs');
-
 const rimraf = require('rimraf');
 
 // css
