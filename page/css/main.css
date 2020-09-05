@@ -9,7 +9,8 @@ main {
 	width: 80%;
 	margin: 15px auto;
 	padding: 15px;
-	box-shadow: 0 0 5px 0;
+	box-shadow: 0 0 5px 0 var(--shadow-color);
+	background-color: var(--clear-background-color);
 }
 
 @media all and (max-width: 800px) {

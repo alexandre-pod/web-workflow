@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>test workflow</title>
+	<title>TiTodo</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="manifest" href="manifest.json">
@@ -13,10 +13,11 @@
 	<!-- <script src="" type="text/javascript" async defer></script> -->
 </head>
 <body>
+@@include('./template/header.html')
 <main>
-	<h1>Main title</h1>
-	@@include('./template/template1.html')
+	@@include('./template/content.html')
 </main>
+@@include('./template/footer.html')
 
 <!-- import scripts -->
 <script src="script.min.js" type="text/javascript" charset="utf-8"></script>

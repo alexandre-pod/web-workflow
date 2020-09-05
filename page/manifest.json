@@ -1,10 +1,10 @@
 {
-  "name": "test workflow",
-  "short_name": "test workflow",
+  "name": "TiTodo",
+  "short_name": "TiTodo",
   "start_url": "index.html",
   "background_color": "forestgreen",
   "theme_color": "lightblue",
-  "description": "A simple workflow for web pages",
+  "description": "A Todo app",
   "icons": [{
     "src": "icon.png",
     "sizes": "48x48",
