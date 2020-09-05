@@ -17,7 +17,8 @@ const cleanCSS = require('gulp-clean-css');
 
 // javascript
 const jshint = require('gulp-jshint');
-const uglify = require('gulp-uglify');
+const terser = require('gulp-terser');
+const sourcemaps = require('gulp-sourcemaps');
 
 // html
 const fileinclude = require('gulp-file-include');
@@ -29,9 +30,9 @@ var browserSync = require('browser-sync').create();
 
 // Constants
 const pagePath = 'page';
-const cssFiles = path.join(pagePath, 'css', '*.css');
-const jsFiles = path.join(pagePath, 'js', '*.js');
-const templateFiles = path.join(pagePath, 'template', '*.html');
+const cssFiles = path.join(pagePath, 'css', '**', '*.css');
+const jsFiles = path.join(pagePath, 'js', '**', '*.js');
+const templateFiles = path.join(pagePath, 'template', '**', '*.html');
 const indexFile = path.join(pagePath, 'index.html');
 const othersRessources = [path.join(pagePath, '**', '*.*'), '!'+indexFile, '!'+cssFiles, '!'+jsFiles, '!'+templateFiles];
 
@@ -50,8 +51,10 @@ gulp.task('build-js', gulp.series('lint-js', () => {
 		.pipe(plumber())
 		.pipe(concat('script.js'))
 		.pipe(gulp.dest(destinationFolder))
-		.pipe(uglify())
+		.pipe(sourcemaps.init())
+		.pipe(terser())
 		.pipe(rename('script.min.js'))
+		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest(destinationFolder));
 }));
 
@@ -75,16 +78,19 @@ gulp.task('lint-html', () => {
 });
 
 gulp.task('build-html', gulp.series('lint-html', () => {
-  return gulp.src(indexFile)
-  	.pipe(plumber())
-    .pipe(fileinclude({
-      prefix: '@@',
-      basepath: '@file'
-    }))
-    .pipe(htmlhint())
-    .pipe(htmlhint.failReporter())
-    .pipe(htmlmin({collapseWhitespace: true}))
-    .pipe(gulp.dest(destinationFolder));
+	return gulp.src(indexFile)
+		.pipe(plumber())
+		.pipe(fileinclude({
+			prefix: '@@',
+			basepath: '@file'
+		}))
+		.pipe(htmlhint())
+		.pipe(htmlhint.failReporter())
+		.pipe(htmlmin({
+			collapseWhitespace: true,
+			removeComments: true
+		}))
+		.pipe(gulp.dest(destinationFolder));
 }));
 
 
@@ -104,12 +110,12 @@ gulp.task('watch-files', (done) => {
 });
 
 gulp.task('browser-sync', () => {
-    browserSync.init({
-        server: {
-            baseDir: "./dist"
-        }
-    });
-      gulp.watch("dist/*").on('change', browserSync.reload);
+	browserSync.init({
+		server: {
+			baseDir: "./dist"
+		}
+	});
+	gulp.watch("dist/*").on('change', browserSync.reload);
 });
 
 gulp.task('build', gulp.series('build-js', 'build-css', 'build-html', 'other'));
