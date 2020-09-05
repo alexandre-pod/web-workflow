@@ -16,8 +16,9 @@ const cleanCSS = require('gulp-clean-css');
 
 
 // javascript
-const jshint = require('gulp-jshint');
+const eslint = require('gulp-eslint');
 const terser = require('gulp-terser');
+const babel = require('gulp-babel');
 const sourcemaps = require('gulp-sourcemaps');
 
 // html
@@ -41,15 +42,16 @@ const destinationFolder = 'dist';
 // JS
 gulp.task('lint-js', () => {
 	return gulp.src(jsFiles)
-		.pipe(jshint())
-		.pipe(jshint.reporter('default'))
-		.pipe(jshint.reporter('fail'));
+		.pipe(eslint())
+		.pipe(eslint.format())
+		.pipe(eslint.failAfterError());
 });
 
 gulp.task('build-js', gulp.series('lint-js', () => {
 	return gulp.src(jsFiles)
 		.pipe(plumber())
 		.pipe(concat('script.js'))
+		.pipe(babel())
 		.pipe(gulp.dest(destinationFolder))
 		.pipe(sourcemaps.init())
 		.pipe(terser())
